@@ -208,16 +208,94 @@ Pekerjaan untuk **US-03: Pesan via WhatsApp** telah selesai.
 ## US-04 Login admin
 
 **Prompt:**
+Baca AGENTS.md bagian aturan keamanan dan docs/user-stories.md bagian US-04.
+
+Buat login admin memakai Supabase Auth (email dan password) dengan @supabase/ssr dan cookie, memakai SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY. Login diproses dengan Server Action di app/admin/actions.js dan disambungkan ke form di app/admin/login/page.jsx. Login berhasil diarahkan ke /admin; login gagal menampilkan pesan error yang jelas di halaman login. Buat juga tombol "Keluar" di components/NavAdmin.jsx berfungsi: mengakhiri sesi lalu kembali ke /admin/login. Jangan ubah tampilan. Hapus CatatanBelumAktif dari halaman login.
 
 **Hasil:**
+Viewed page.jsx:1-29
+Viewed NavAdmin.jsx:1-19
+Viewed Input.jsx:1-16
+Viewed Tombol.jsx:1-26
+Viewed page.jsx:1-43
+Viewed FormProduk.jsx:1-35
+Ran command: Inspect @supabase/ssr exports (`node -e "const ssr = require('@supabase/ssr'); console.log(Object.keys(ssr));"`)
+Ran command: Inspect next/headers cookies (`node -e "const { cookies } = require('next/headers'); console.log(typeof cookies);"`)
+Ran command: Inspect @supabase/ssr types (`node -e "const fs = require('fs'); console.log(fs.readFileSync('./node_modules/@supabase/ssr/dist/index.d.ts', 'utf8').slice(0, 1000));"`)
+Ran command: List @supabase/ssr files (`Get-ChildItem node_modules/@supabase/ssr`)
+Viewed README.md:1-100
+Viewed README.md:101-165
+Created test-auth.mjs
+Ran command: Execute test-auth script (`node C:\Users\Fatur\.gemini\antigravity\brain\7f3986ba-4407-4748-9018-5fb6a2becced\scratch\test-auth.mjs`)
+Viewed package.json:1-40
+Created test-auth.mjs
+Ran command: Run test-auth script (`node C:\Users\Fatur\.gemini\antigravity\brain\7f3986ba-4407-4748-9018-5fb6a2becced\scratch\test-auth.mjs`)
+Created test-auth.cjs
+Ran command: Run CJS test-auth script (`node C:\Users\Fatur\.gemini\antigravity\brain\7f3986ba-4407-4748-9018-5fb6a2becced\scratch\test-auth.cjs`)
+Ran command: Run test-auth.cjs with NODE_PATH (`$env:NODE_PATH="c:\Users\Fatur\Documents\katalog-fatur\node_modules"; node C:\Users\Fatur\.gemini\antigravity\brain\7f3986ba-4407-4748-9018-5fb6a2becced\scratch\test-auth.cjs`)
+Ran command: Check if app/admin/actions.js exists (`Test-Path app/admin/actions.js`)
+Created admin.js
+Created index.js
+Created actions.js
+Created page.jsx
+Created NavAdmin.jsx
+Ran command: Run npm run build (`npm run build`)
+Ran command: Start Next.js server (`npm run start`)
+Checked task Start Next.js server
+Ran command: Fetch /admin/login (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/admin/login" -UseBasicParsing; Write-Host "Status:" $resp.StatusCode; Write-Host "Contains 'Masuk admin':" ($resp.Content -match "Masuk admin"); Write-Host "Contains CatatanBelumAktif:" ($resp.Content -match "Login belum berfungsi")`)
+Ran command: Fetch /admin/login with error param (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/admin/login?error=Email%20atau%20password%20salah." -UseBasicParsing; Write-Host "Status:" $resp.StatusCode; Write-Host "Contains error:" ($resp.Content -match "Email atau password salah.")`)
+Ran command: Fetch /admin to verify NavAdmin (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/admin" -UseBasicParsing; Write-Host "Contains 'Keluar':" ($resp.Content -match "Keluar"); Write-Host "Contains form for Keluar:" ($resp.Content -match '<button[^>]*>Keluar</button>')`)
+Killed task Start Next.js server
+
+Pekerjaan untuk **US-04: Login admin** telah selesai.
+
+### Perubahan File
+
+1. **[`lib/supabase/admin.js`](file:///c:/Users/Fatur/Documents/katalog-fatur/lib/supabase/admin.js)** & **[`lib/supabase/index.js`](file:///c:/Users/Fatur/Documents/katalog-fatur/lib/supabase/index.js)**:
+   - Membuat fungsi `buatKoneksiAdmin()` di sisi server menggunakan `createServerClient` dari `@supabase/ssr` dan cookie store dari `next/headers`.
+   - Menggunakan `SUPABASE_URL` dan `SUPABASE_PUBLISHABLE_KEY`.
+2. **[`app/admin/actions.js`](file:///c:/Users/Fatur/Documents/katalog-fatur/app/admin/actions.js)**:
+   - Membuat Server Action `login`: memproses email & password dengan `supabase.auth.signInWithPassword`. Jika berhasil dialihkan ke `/admin`, jika gagal dialihkan kembali ke `/admin/login?error=...` dengan pesan error yang jelas.
+   - Membuat Server Action `keluar`: mengakhiri sesi admin dengan `supabase.auth.signOut` lalu mengarahkan kembali ke `/admin/login`.
+3. **[`app/admin/login/page.jsx`](file:///c:/Users/Fatur/Documents/katalog-fatur/app/admin/login/page.jsx)**:
+   - Menyambungkan form ke Server Action `login`.
+   - Menampilkan kotak pesan error jika login gagal.
+   - Menghapus komponen `CatatanBelumAktif`.
+4. **[`components/NavAdmin.jsx`](file:///c:/Users/Fatur/Documents/katalog-fatur/components/NavAdmin.jsx)**:
+   - Memfungsikan tombol "Keluar" menggunakan Server Action `keluar` untuk mengakhiri sesi dan kembali ke `/admin/login`, tanpa mengubah tampilan dan posisinya.
+
+---
+
+### Cara Mengetes
+
+1. Jalankan development server:
+   ```bash
+   npm run dev
+   ```
+2. Buka halaman login di [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+3. **Uji login gagal**:
+   - Masukkan email atau password yang salah, lalu klik **Masuk**.
+   - Halaman akan memuat kembali dan menampilkan pesan error *"Email atau password salah."* di atas form.
+4. **Uji login berhasil**:
+   - Masukkan email dan password admin Supabase Anda yang valid, lalu klik **Masuk**.
+   - Browser akan dialihkan secara otomatis ke halaman `/admin`.
+5. **Uji keluar (logout)**:
+   - Di halaman `/admin`, klik tombol **Keluar** di pojok kanan navigasi admin.
+   - Sesi akan diakhiri dan browser dialihkan kembali ke `/admin/login`.
 
 **Perbaikan:**
+- **Prompt:** cocokkan tampilan produk halaman admin dengan database yang benar
+- **Hasil:** Mengubah `app/admin/page.jsx` agar mengambil data produk dari tabel `produk` di Supabase (US-07) alih-alih data contoh, sehingga daftar produk di halaman admin sesuai dengan database. Menambahkan juga penanganan kondisi tabel kosong pada `components/TabelProduk.jsx`.
 
 ## US-05 Ganti password
 
 **Prompt:**
+Baca docs/user-stories.md bagian US-05.
+
+Buat Server Action ganti password di app/admin/actions.js untuk admin yang sedang login, memakai Supabase Auth. Validasi di server: password baru minimal 8 karakter dan harus sama dengan konfirmasi. Tampilkan pesan berhasil atau pesan error yang jelas di halaman. Sambungkan ke form di app/admin/password/page.jsx tanpa mengubah tampilannya. Hapus CatatanBelumAktif dari halaman ini.
 
 **Hasil:**
+
 
 **Perbaikan:**
 
