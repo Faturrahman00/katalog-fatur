@@ -156,8 +156,52 @@ Pekerjaan untuk **US-02: Detail produk** telah selesai.
 ## US-03 Pesan via WhatsApp
 
 **Prompt:**
+Baca docs/rancangan-teknis.md bagian "Pesan WhatsApp (US-03)".
+
+Ubah components/TombolWhatsApp.jsx menjadi tautan yang membuka https://wa.me/ ke nomor di lib/toko.js, dengan pesan otomatis berisi nama dan harga produk dalam format rupiah. Pesan di-encode dengan encodeURIComponent dan dibuka di tab baru. Pertahankan tampilan tombolnya. Hapus CatatanBelumAktif yang menyebut US-03 di halaman detail produk.
 
 **Hasil:**
+Viewed TombolWhatsApp.jsx:1-13
+Viewed toko.js:1-10
+Viewed format.js:1-8
+Viewed page.jsx:1-44
+Ran command: Search for message template in docs (`Select-String -Path "*.md", "docs/*.md" -Pattern "Halo|wa\.me"`)
+Viewed PROMPTS.md:150-194
+Ran command: Search US-03 in jsx files (`Select-String -Path "app/**/*.jsx", "components/**/*.jsx" -Pattern "US-03"`)
+Created TombolWhatsApp.jsx
+Ran command: Run npm run build (`npm run build`)
+Ran command: Start server for testing TombolWhatsApp (`npm run start`)
+Checked task Start server for testing TombolWhatsApp
+Ran command: Verify WhatsApp link (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/produk/1" -UseBasicParsing; if ($resp.Content -match 'href="(https://wa\.me/[^"]+)"') { Write-Host "Found WA link:" $matches[1] } else { Write-Host "WA link not found" }`)
+Ran command: Verify target and rel attributes (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/produk/1" -UseBasicParsing; Write-Host "Target blank:" ($resp.Content -match 'target="_blank"'); Write-Host "Noopener:" ($resp.Content -match 'rel="noopener noreferrer"')`)
+Killed task Start server for testing TombolWhatsApp
+Viewed TombolWhatsApp.jsx:1-23
+
+Pekerjaan untuk **US-03: Pesan via WhatsApp** telah selesai.
+
+### Perubahan File
+
+- **[`components/TombolWhatsApp.jsx`](file:///c:/Users/Fatur/Documents/katalog-fatur/components/TombolWhatsApp.jsx)**:
+  - Diubah dari elemen `<button>` menjadi tautan `<a>` dengan target `_blank` dan `rel="noopener noreferrer"`.
+  - Mengambil nomor WhatsApp toko dari [`@/lib/toko`](file:///c:/Users/Fatur/Documents/katalog-fatur/lib/toko.js).
+  - Pesan otomatis diformat dengan nama dan harga produk dalam format rupiah menggunakan [`formatRupiah`](file:///c:/Users/Fatur/Documents/katalog-fatur/lib/format.js), lalu di-encode dengan `encodeURIComponent`.
+  - Mempertahankan kelas Tailwind dan tampilan tombol seperti semula.
+- **[`app/produk/[id]/page.jsx`](file:///c:/Users/Fatur/Documents/katalog-fatur/app/produk/%5Bid%5D/page.jsx)**:
+  - Komponen `CatatanBelumAktif` terkait US-03 sudah dipastikan bersih dari halaman detail produk.
+
+---
+
+### Cara Mengetes
+
+1. Jalankan development server jika belum berjalan:
+   ```bash
+   npm run dev
+   ```
+2. Buka salah satu halaman detail produk, misalnya [http://localhost:3000/produk/1](http://localhost:3000/produk/1).
+3. Klik tombol **"Pesan via WhatsApp"**:
+   - Browser akan membuka tab baru ke alamat `https://wa.me/<nomorWhatsApp>?text=...`.
+   - Pastikan nomor tujuan sesuai dengan `lib/toko.js`.
+   - Pastikan kolom pesan di WhatsApp sudah terisi otomatis dengan nama dan harga produk (format rupiah).
 
 **Perbaikan:**
 
