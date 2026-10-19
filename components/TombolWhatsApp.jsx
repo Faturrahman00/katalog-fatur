@@ -13,11 +13,14 @@ export default function TombolWhatsApp({ produk }) {
   const totalHarga = produk.harga * jumlah;
 
   // Bangun pesan otomatis sesuai US-03 dan US-12
-  let pesan = `Halo, saya ingin memesan:\n• Produk: ${produk.nama}\n• Jumlah: ${jumlah}`;
-  if (varian.trim()) {
-    pesan += `\n• Varian/Catatan: ${varian.trim()}`;
+  let pesan = `Halo, saya ingin memesan ${produk.nama} seharga ${formatRupiah(produk.harga)}.`;
+  if (jumlah > 1 || varian.trim()) {
+    pesan = `Halo, saya ingin memesan:\n• Produk: ${produk.nama}\n• Jumlah: ${jumlah}`;
+    if (varian.trim()) {
+      pesan += `\n• Varian/Catatan: ${varian.trim()}`;
+    }
+    pesan += `\n• Total: ${formatRupiah(totalHarga)}`;
   }
-  pesan += `\n• Total: ${formatRupiah(totalHarga)}`;
 
   const nomor = String(toko.nomorWhatsApp).replace(/\D/g, "");
   const url = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
@@ -77,7 +80,7 @@ export default function TombolWhatsApp({ produk }) {
         rel="noopener noreferrer"
         className="inline-flex w-full items-center justify-center rounded-lg bg-utama px-5 py-3 font-semibold text-white hover:bg-utama-gelap sm:w-auto transition-colors"
       >
-        Pesan via WhatsApp {jumlah > 1 ? `(${jumlah} item)` : ""}
+        Pesan via WhatsApp{jumlah > 1 ? ` (${jumlah} item)` : ""}
       </a>
     </div>
   );

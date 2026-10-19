@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { buatKoneksiAdmin } from "@/lib/supabase/admin";
 
 /**
@@ -180,6 +181,8 @@ export async function tambahProduk(prevStateOrFormData, maybeFormData) {
     );
   }
 
+  revalidatePath("/");
+  revalidatePath("/admin");
   redirect("/admin");
 }
 
@@ -225,6 +228,9 @@ export async function ubahProduk(prevStateOrFormData, maybeFormData) {
     );
   }
 
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/produk/${id}`);
   redirect("/admin");
 }
 
@@ -239,6 +245,8 @@ export async function hapusProduk(formData) {
     await supabase.from("produk").delete().eq("id", id);
   }
 
+  revalidatePath("/");
+  revalidatePath("/admin");
   redirect("/admin");
 }
 

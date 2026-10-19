@@ -355,11 +355,15 @@ Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin
 ### US-13 Bisa di-install di HP (PWA)
 - **Status:** Selesai
 - **Perubahan:**
-  - Membuat `app/manifest.js` dengan icon `192x192` dan `512x512`.
-  - Menambahkan metadata PWA dan registrasi Service Worker `public/sw.js` di `app/layout.jsx`.
+  - Membuat file statis `public/manifest.json` dan memperbarui `app/manifest.js` dengan atribut lengkap: `start_url`, `scope`, `id`, `orientation`, `display: "standalone"`, serta icon PNG `192x192` dan `512x512` dengan `purpose: "any"` dan `purpose: "maskable"`.
+  - Menambahkan komponen banner dan tombol install interaktif `components/InstallPWA.jsx` yang menangkap event `beforeinstallprompt` untuk Android/Chromium serta petunjuk "Tambah ke Layar Utama" untuk iOS Safari.
+  - Memperbarui `app/layout.jsx` dengan meta tag mobile PWA (`mobile-web-app-capable`, `apple-mobile-web-app-capable`, `apple-touch-icon`) dan registrasi Service Worker `public/sw.js` yang tangguh dengan cache aset statis dan fallback offline.
+  - Menambahkan `revalidatePath` di `app/admin/actions.js` pada aksi tambah, ubah, dan hapus produk agar katalog dan halaman admin langsung terbarukan.
+  - Memperbaiki pesan dan label tombol pada `components/TombolWhatsApp.jsx` agar presisi tanpa spasi berlebih.
 
 ### US-14 Deskripsi Produk Dibuat AI
 - **Status:** Selesai
 - **Perubahan:**
   - Membuat Server Action `buatDeskripsiAI` di `app/admin/actions.js` yang terhubung ke Gemini API dengan smart generator fallback.
   - Menambahkan tombol "✨ Buat dengan AI" pada `components/FormProduk.jsx` yang otomatis mengisi textarea deskripsi berdasarkan nama dan kategori produk.
+
