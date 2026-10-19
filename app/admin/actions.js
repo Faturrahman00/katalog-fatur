@@ -61,3 +61,73 @@ export async function keluar() {
 
 export const logout = keluar;
 
+/**
+ * Server Action untuk mengganti password admin yang sedang login.
+ */
+export async function gantiPassword(prevStateOrFormData, maybeFormData) {
+  const formData =
+    maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData;
+
+  const passwordBaru = formData?.get("password_baru");
+  const konfirmasiPassword = formData?.get("konfirmasi_password");
+
+  // 1. Periksa sesi login admin di server
+  const supabase = await buatKoneksiAdmin();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    redirect(
+      `/admin/login?error=${encodeURIComponent("Silakan login terlebih dahulu.")}`
+    );
+  }
+
+  // 2. Validasi panjang minimal 8 karakter
+  if (!passwordBaru || String(passwordBaru).length < 8) {
+    redirect(
+      `/admin/password?error=${encodeURIComponent(
+        "Password baru minimal 8 karakter."
+      )}`
+    );
+  }
+
+  // 3. Validasi kesamaan dengan konfirmasi
+  if (passwordBaru !== konfirmasiPassword) {
+    redirect(
+      `/admin/password?error=${encodeURIComponent(
+        "Password baru dan konfirmasi password harus sama."
+      )}`
+    );
+  }
+
+  // 4. Update password di Supabase Auth
+  let redirectUrl = null;
+
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: String(passwordBaru),
+    });
+
+    if (error) {
+      redirectUrl = `/admin/password?error=${encodeURIComponent(
+        error.message || "Gagal mengganti password."
+      )}`;
+    } else {
+      redirectUrl = `/admin/password?sukses=${encodeURIComponent(
+        "Password berhasil diganti."
+      )}`;
+    }
+  } catch (err) {
+    redirectUrl = `/admin/password?error=${encodeURIComponent(
+      err.message || "Terjadi kesalahan saat mengganti password."
+    )}`;
+  }
+
+  if (redirectUrl) {
+    redirect(redirectUrl);
+  }
+}
+
+export const changePassword = gantiPassword;
