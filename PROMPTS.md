@@ -107,8 +107,49 @@ Pekerjaan untuk **US-01: Katalog dari database** telah selesai.
 ## US-02 Detail produk
 
 **Prompt:**
+Baca docs/user-stories.md bagian US-02.
+
+Ubah app/produk/[id]/page.jsx supaya mengambil satu produk dari tabel "produk" di Supabase berdasarkan id di URL, di sisi server, memakai koneksi Supabase yang sudah dibuat di lib/supabase. Kalau produk tidak ditemukan, panggil notFound(). Jangan ubah tampilannya. Hapus CatatanBelumAktif dari halaman ini, tapi biarkan tombol WhatsApp.
 
 **Hasil:**
+Viewed page.jsx:1-41
+Created test-detail.mjs
+Ran command: Execute test-detail script (`node C:\Users\Fatur\.gemini\antigravity\brain\7f3986ba-4407-4748-9018-5fb6a2becced\scratch\test-detail.mjs`)
+Created page.jsx
+Ran command: Run npm run build (`npm run build`)
+Ran command: Start server for testing detail page (`npm run start`)
+Checked task Start server for testing detail page
+Ran command: Fetch /produk/1 (`$resp = Invoke-WebRequest -Uri "http://localhost:3000/produk/1" -UseBasicParsing; Write-Host "Status:" $resp.StatusCode; Write-Host "Contains product:" ($resp.Content -match "Kopi Bubuk Robusta"); Write-Host "Contains CatatanBelumAktif:" ($resp.Content -match "Tombol pesan belum berfungsi")`)
+Ran command: Fetch /produk/9999 (404) (`try { $resp = Invoke-WebRequest -Uri "http://localhost:3000/produk/9999" -UseBasicParsing; Write-Host "Status:" $resp.StatusCode } catch { Write-Host "Status:" $_.Exception.Response.StatusCode.value__; $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream()); $body = $reader.ReadToEnd(); Write-Host "Contains 404 text:" ($body -match "Halaman tidak ditemukan") }`)
+Ran command: Fetch /produk/abc (404) (`try { $resp = Invoke-WebRequest -Uri "http://localhost:3000/produk/abc" -UseBasicParsing; Write-Host "Status:" $resp.StatusCode } catch { Write-Host "Status:" $_.Exception.Response.StatusCode.value__; $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream()); $body = $reader.ReadToEnd(); Write-Host "Contains 404 text:" ($body -match "Halaman tidak ditemukan") }`)
+Killed task Start server for testing detail page
+Viewed page.jsx:1-44
+
+Pekerjaan untuk **US-02: Detail produk** telah selesai.
+
+### Perubahan File
+
+- **[`app/produk/[id]/page.jsx`](file:///c:/Users/Fatur/Documents/katalog-fatur/app/produk/%5Bid%5D/page.jsx)**:
+  - Diubah menjadi Server Component async yang mengambil satu produk dari tabel `produk` di Supabase berdasarkan parameter `id`.
+  - Menggunakan koneksi server dari [`@/lib/supabase/server`](file:///c:/Users/Fatur/Documents/katalog-fatur/lib/supabase/server.js).
+  - Memanggil `notFound()` jika produk tidak ditemukan atau ID tidak valid.
+  - Mempertahankan tampilan dan komponen [`TombolWhatsApp`](file:///c:/Users/Fatur/Documents/katalog-fatur/components/TombolWhatsApp.jsx).
+  - Menghapus komponen `CatatanBelumAktif` serta referensi `cariProdukContoh` dari `data-contoh.js`.
+
+---
+
+### Cara Mengetes
+
+1. Jalankan development server (jika belum berjalan):
+   ```bash
+   npm run dev
+   ```
+2. **Cek produk valid**:
+   - Buka katalog di [http://localhost:3000](http://localhost:3000) dan klik salah satu produk (misalnya produk pertama).
+   - Pastikan halaman diarahkan ke [http://localhost:3000/produk/1](http://localhost:3000/produk/1) dengan detail lengkap (foto, kategori, nama, harga rupiah, dan deskripsi dari database) serta tombol WhatsApp tampil rapi tanpa catatan belum aktif.
+3. **Cek produk tidak ada / ID tidak valid**:
+   - Buka URL yang tidak ada di database, seperti [http://localhost:3000/produk/9999](http://localhost:3000/produk/9999) atau [http://localhost:3000/produk/abc](http://localhost:3000/produk/abc).
+   - Pastikan halaman beralih ke tampilan 404 (*"Halaman tidak ditemukan"*).
 
 **Perbaikan:**
 
