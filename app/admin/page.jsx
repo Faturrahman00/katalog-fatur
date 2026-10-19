@@ -1,7 +1,6 @@
 import NavAdmin from "@/components/NavAdmin";
 import TabelProduk from "@/components/TabelProduk";
 import Tombol from "@/components/Tombol";
-import CatatanBelumAktif from "@/components/CatatanBelumAktif";
 import { buatKoneksiAdmin } from "@/lib/supabase/admin";
 import { buatKoneksiServer } from "@/lib/supabase/server";
 
@@ -59,9 +58,6 @@ export default async function HalamanAdmin() {
         {/* US-08 (bonus): tambah produk */}
         <Tombol href="/admin/produk/baru">Tambah produk</Tombol>
       </div>
-      <CatatanBelumAktif>
-        Halaman admin belum terlindungi: lihat US-06.
-      </CatatanBelumAktif>
       {errorPesan ? (
         <p className="rounded-xl border border-garis bg-permukaan p-4 text-sm text-bahaya">
           Gagal memuat produk: {errorPesan}

@@ -4,6 +4,27 @@ import { redirect } from "next/navigation";
 import { buatKoneksiAdmin } from "@/lib/supabase/admin";
 
 /**
+ * Memeriksa apakah admin sudah login di sisi server.
+ * Digunakan oleh semua Server Action yang mengubah data.
+ * Jika belum login, langsung dialihkan ke /admin/login.
+ */
+export async function periksaLoginAdmin() {
+  const supabase = await buatKoneksiAdmin();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect(
+      `/admin/login?error=${encodeURIComponent("Silakan login terlebih dahulu.")}`
+    );
+  }
+
+  return { supabase, user };
+}
+
+/**
  * Server Action untuk memproses login admin.
  */
 export async function login(prevStateOrFormData, maybeFormData) {
@@ -63,6 +84,7 @@ export const logout = keluar;
 
 /**
  * Server Action untuk mengganti password admin yang sedang login.
+ * Memeriksa login admin di server sebelum menjalankan perubahan.
  */
 export async function gantiPassword(prevStateOrFormData, maybeFormData) {
   const formData =
@@ -72,17 +94,7 @@ export async function gantiPassword(prevStateOrFormData, maybeFormData) {
   const konfirmasiPassword = formData?.get("konfirmasi_password");
 
   // 1. Periksa sesi login admin di server
-  const supabase = await buatKoneksiAdmin();
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    redirect(
-      `/admin/login?error=${encodeURIComponent("Silakan login terlebih dahulu.")}`
-    );
-  }
+  const { supabase } = await periksaLoginAdmin();
 
   // 2. Validasi panjang minimal 8 karakter
   if (!passwordBaru || String(passwordBaru).length < 8) {

@@ -305,11 +305,29 @@ Buat Server Action ganti password di app/admin/actions.js untuk admin yang sedan
 ## US-06 Proteksi halaman admin
 
 **Prompt:**
+Baca AGENTS.md aturan keamanan nomor 3 dan 4, dan docs/user-stories.md bagian US-06.
+
+Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin/login wajib login dengan Supabase Auth; kalau belum login, alihkan ke /admin/login. Pastikan juga setiap Server Action yang mengubah data memeriksa login di server. Hapus CatatanBelumAktif dari halaman /admin.
 
 **Hasil:**
+- Membuat file `proxy.js` di root proyek untuk memproteksi seluruh rute `/admin` (kecuali `/admin/login`) menggunakan `createServerClient` dari `@supabase/ssr`. Jika belum login, pengunjung dialihkan (307 redirect) ke `/admin/login`.
+- Membuat helper `periksaLoginAdmin` di `app/admin/actions.js` untuk memastikan semua Server Action yang mengubah data memeriksa sesi login di server.
+- Menghapus komponen `CatatanBelumAktif` dari `app/admin/page.jsx`.
 
 **Perbaikan:**
 
 ## Debugging dan fitur bonus
 
 Tambahkan bagian baru untuk setiap error yang kamu perbaiki atau fitur bonus yang kamu kerjakan.
+
+### US-11 Filter kategori atau pencarian
+
+**Prompt:**
+buatkan saya fitur pencarian dan filtering katalog produk dan masukkan log prompt dan jawaban di prompts.md
+
+**Hasil:**
+- Mengubah `app/page.jsx` agar mendukung pencarian teks (nama, deskripsi, atau kategori) serta filtering kategori dinamis berdasarkan data yang ada di tabel `produk` Supabase.
+- Kategori unik diambil langsung dari produk database dan ditampilkan sebagai tombol pil/tag filter yang interaktif (Semua, Akun Mid, Akun Low, Akun High, Kain, dll.).
+- Menggunakan query parameter URL (`?cari=...` dan `?kategori=...`) dengan form pencarian dan tombol reset.
+- Menampilkan state kosong yang ramah jika tidak ada produk yang cocok dengan pencarian atau filter yang dipilih.
+
