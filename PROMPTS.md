@@ -318,16 +318,48 @@ Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin
 
 ## Debugging dan fitur bonus
 
-Tambahkan bagian baru untuk setiap error yang kamu perbaiki atau fitur bonus yang kamu kerjakan.
+### US-07 List Produk di Halaman Admin dari Database
+- **Status:** Selesai
+- **Perubahan:** Mengubah `app/admin/page.jsx` agar mengambil data produk langsung dari tabel `produk` di Supabase secara dinamis (menggantikan data contoh).
 
-### US-11 Filter kategori atau pencarian
+### US-08 Tambah Produk (Terkunci Login)
+- **Status:** Selesai
+- **Perubahan:** 
+  - Membuat Server Action `tambahProduk` di `app/admin/actions.js` yang terproteksi login dengan `periksaLoginAdmin()`.
+  - Mengubah `app/admin/produk/baru/page.jsx` menyambungkan ke `tambahProduk` dan menghapus `CatatanBelumAktif`.
 
-**Prompt:**
-buatkan saya fitur pencarian dan filtering katalog produk dan masukkan log prompt dan jawaban di prompts.md
+### US-09 Ubah Produk (Terkunci Login)
+- **Status:** Selesai
+- **Perubahan:**
+  - Membuat Server Action `ubahProduk` di `app/admin/actions.js` yang terproteksi login.
+  - Mengubah `app/admin/produk/[id]/ubah/page.jsx` mengambil data lama dari Supabase, menyambungkan form ke `ubahProduk`, dan menghapus `CatatanBelumAktif`.
 
-**Hasil:**
-- Mengubah `app/page.jsx` agar mendukung pencarian teks (nama, deskripsi, atau kategori) serta filtering kategori dinamis berdasarkan data yang ada di tabel `produk` Supabase.
-- Kategori unik diambil langsung dari produk database dan ditampilkan sebagai tombol pil/tag filter yang interaktif (Semua, Akun Mid, Akun Low, Akun High, Kain, dll.).
-- Menggunakan query parameter URL (`?cari=...` dan `?kategori=...`) dengan form pencarian dan tombol reset.
-- Menampilkan state kosong yang ramah jika tidak ada produk yang cocok dengan pencarian atau filter yang dipilih.
+### US-10 Hapus Produk (Terkunci Login)
+- **Status:** Selesai
+- **Perubahan:**
+  - Membuat Server Action `hapusProduk` di `app/admin/actions.js` yang terproteksi login.
+  - Memperbarui `components/TabelProduk.jsx` menambahkan konfirmasi dialog sebelum menghapus dan menjalankan Server Action `hapusProduk`.
 
+### US-11 Filter Kategori atau Pencarian
+- **Status:** Selesai
+- **Perubahan:**
+  - Mengubah `app/page.jsx` menambahkan form pencarian (nama & deskripsi) dan filter tombol kategori dinamis berdasarkan data tabel `produk`.
+  - Dilengkapi tombol reset dan pesan ramah saat produk tidak ditemukan.
+
+### US-12 Pilih Jumlah atau Varian
+- **Status:** Selesai
+- **Perubahan:**
+  - Memperbarui `components/TombolWhatsApp.jsx` pada halaman detail produk dengan selector jumlah (`-` dan `+`), input opsi varian / catatan pesanan, dan perhitungan estimasi total harga.
+  - Pilihan jumlah dan varian otomatis tertulis di pesan WhatsApp.
+
+### US-13 Bisa di-install di HP (PWA)
+- **Status:** Selesai
+- **Perubahan:**
+  - Membuat `app/manifest.js` dengan icon `192x192` dan `512x512`.
+  - Menambahkan metadata PWA dan registrasi Service Worker `public/sw.js` di `app/layout.jsx`.
+
+### US-14 Deskripsi Produk Dibuat AI
+- **Status:** Selesai
+- **Perubahan:**
+  - Membuat Server Action `buatDeskripsiAI` di `app/admin/actions.js` yang terhubung ke Gemini API dengan smart generator fallback.
+  - Menambahkan tombol "✨ Buat dengan AI" pada `components/FormProduk.jsx` yang otomatis mengisi textarea deskripsi berdasarkan nama dan kategori produk.

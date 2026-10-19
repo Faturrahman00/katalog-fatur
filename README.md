@@ -74,7 +74,15 @@ Urutan yang disarankan: US-01, US-02, US-03, US-04, US-05, US-06, lalu fitur bon
 
 ## Tentang aplikasi ini
 
-- **Nama usaha:**
-- **Pembuat:**
-- **Link aplikasi:**
+- **Nama usaha: Radiant Vault**
+- **Pembuat: Muhammad Faturrahman**
+- **Link aplikasi: https://katalog-fatur.vercel.app/**
 - **Fitur bonus yang dikerjakan:**
+  - US-07: List Produk di Halaman Admin dari Database
+  - US-08: Tambah Produk (Terkunci Login)
+  - US-09: Ubah Produk (Terkunci Login)
+  - US-10: Hapus Produk (Terkunci Login)
+  - US-11: Filter Kategori atau Pencarian
+  - US-12: Pilih Jumlah atau Varian
+  - US-13: Bisa di-install di HP (PWA)
+  - US-14: Deskripsi Produk Dibuat AI
